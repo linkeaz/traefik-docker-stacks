@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  dockge:
+    image: louislam/dockge:1
+    container_name: dockge
+    restart: unless-stopped
+
+    # Mount Docker socket for Dockge to interact with Docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${DOCKGE_STACKS_DIR}:/opt/stacks  # Directory where Docker Compose stacks are stored
+
+    environment:
+      - DOCKGE_STACKS_DIR=${DOCKGE_STACKS_DIR}  # Define the directory for storing stack configurations
+
+    networks:
+      - traefik-net
+
+    labels:
+      - "traefik.enable=true"
+      
+      # Define the Traefik router for Dockge
+      - "traefik.http.routers.dockge.rule=Host(`${DOCKGE_DOMAIN}`)"
+      - "traefik.http.routers.dockge.entrypoints=https"
+      - "traefik.http.routers.dockge.tls.certresolver=letsencrypt"
+      - "traefik.http.services.dockge.loadbalancer.server.port=${DOCKGE_PORT}"
+
+      # Apply IP restriction for controlled access
+      - "traefik.http.routers.dockge.middlewares=dockge-ipwhitelist,security-headers"
+      - "traefik.http.middlewares.dockge-ipwhitelist.ipwhitelist.sourcerange=${SERVICE_ALLOWED_IPS}"
+
+networks:
+  traefik-net:
+    external: true
