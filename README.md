@@ -16,7 +16,7 @@ This project is licensed under the [Creative Commons Attribution-ShareAlike 4.0 
 ### 🔹 Rights and Obligations:
 
 - ✅ You may **use, modify, and redistribute** this guide and its configurations.
-- ✅ You must **credit the author** by citing **[Linkeaz](https://github.com/linkeaz)**.
+- ✅ You must **credit the author** by citing **[Linkeaz](https://github.com/linkeaz)** or [Slym B.](https://github.com/slymb).
 - ❌ You **may not remove attribution**.
 
 
