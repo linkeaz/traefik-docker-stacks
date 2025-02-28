@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  netdata:
+    image: netdata/netdata:latest
+    container_name: netdata
+    hostname: netdata
+    restart: unless-stopped
+
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+
+    volumes:
+      - netdata_data:/var/lib/netdata
+      - /etc/localtime:/etc/localtime:ro
+
+    environment:
+      - TZ=${TZ}
+
+    networks:
+      - traefik-net
+
+    labels:
+      - "traefik.enable=true"
+
+      # Basic routing configuration
+      - "traefik.http.routers.netdata.rule=Host(`${NETDATA_DOMAIN}`)"
+      - "traefik.http.routers.netdata.entrypoints=https"
+      - "traefik.http.routers.netdata.tls.certresolver=letsencrypt"
+      - "traefik.http.services.netdata.loadbalancer.server.port=19999"
+
+      # IP Whitelist (optional)
+      - "traefik.http.middlewares.netdata-ipwhitelist.ipwhitelist.sourcerange=${ALLOWED_IPS}"
+      - "traefik.http.routers.netdata.middlewares=netdata-ipwhitelist"
+
+      # Basic Authentication
+      - "traefik.http.middlewares.netdata-auth.basicauth.users=${NETDATA_USERHASH}"
+
+      # Chaining the Whitelist and Basic Authentication middleware
+      - "traefik.http.routers.netdata.middlewares=netdata-ipwhitelist,netdata-auth"
+
+volumes:
+  netdata_data:
+
+networks:
+  traefik-net:
+    external: true
