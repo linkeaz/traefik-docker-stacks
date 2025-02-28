@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    restart: unless-stopped
+
+    # Define resource limits to optimize performance and prevent overuse
+    deploy:
+      resources:
+        limits:
+          memory: ${UPTIME_KUMA_MEMORY_LIMIT}
+          cpus: ${UPTIME_KUMA_CPU_LIMIT}
+        reservations:
+          memory: ${UPTIME_KUMA_MEMORY_RESERVATION}
+
+    # Mount a persistent volume to store monitoring data
+    volumes:
+      - ./data:/app/data
+
+    networks:
+      - traefik-net
+    
+    # Ports are managed by Traefik, no need for direct exposure
+    # - "3001:3001"
+
+    environment:
+      - UPTIME_KUMA_DOMAIN=${UPTIME_KUMA_DOMAIN}
+    env_file: .env
+
+    labels:
+      - traefik.enable=true
+      
+      # Define Traefik routing for Uptime Kuma
+      - traefik.http.routers.uptime-kuma.rule=Host(`${UPTIME_KUMA_DOMAIN}`)
+      - traefik.http.routers.uptime-kuma.entrypoints=https
+      - traefik.http.routers.uptime-kuma.tls.certresolver=letsencrypt
+      
+      # Apply IP filtering and security headers
+      - traefik.http.routers.uptime-kuma.middlewares=uptime-kuma-ipwhitelist,security-headers
+      - traefik.http.middlewares.uptime-kuma-ipwhitelist.ipwhitelist.sourcerange=${SERVICE_ALLOWED_IPS}
+      
+      # Define internal service port
+      - traefik.http.services.uptime-kuma.loadbalancer.server.port=3001
+
+networks:
+  traefik-net:
+    external: true
