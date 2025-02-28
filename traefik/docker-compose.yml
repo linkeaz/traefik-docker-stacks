@@ -1,0 +1,98 @@
+version: "3.8"
+
+services:
+  traefik:
+    image: traefik:v3.3
+    container_name: traefik
+    restart: unless-stopped
+
+    # Configure access logs
+    command:
+      - --accesslog=true
+      - --accesslog.filepath=/letsencrypt/access.log
+
+      # Enable dashboard and providers
+      - --api.dashboard=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+
+      # Configure HTTP and HTTPS entry points
+      - --entrypoints.http.address=:80
+      - --entrypoints.http.http.redirections.entrypoint.to=https
+      - --entrypoints.http.http.redirections.entrypoint.scheme=https
+      - --entryPoints.https.address=:443
+
+      # Configure Let's Encrypt for automatic certificate management
+      - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
+      - --certificatesresolvers.letsencrypt.acme.email=${TRAEFIK_ACME_EMAIL}
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+      
+      # Test version to avoid Let's Encrypt rate limits (uncomment for testing)
+      # - --certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+      
+      # Use Docker Socket Proxy for secure access
+      - --providers.docker.endpoint=tcp://socket-proxy:2375
+
+    security_opt:
+      - no-new-privileges:true
+
+    networks:
+      - traefik-net
+
+    ports:
+      - 80:80
+      - 443:443
+
+    environment:
+      - TRAEFIK_DASHBOARD_CREDENTIALS=${TRAEFIK_DASHBOARD_CREDENTIALS}
+
+    env_file: .env
+
+    volumes:
+      - ./letsencrypt:/letsencrypt
+
+    labels:
+      - traefik.enable=true
+      
+      # Secure dashboard with IP whitelist and authentication
+      - traefik.http.routers.traefik-secure.rule=Host(`${TRAEFIK_DOMAIN}`) && IPSourceRange(`${ALLOWED_IPS}`)
+      - traefik.http.routers.traefik-secure.entrypoints=https
+      - traefik.http.routers.traefik-secure.service=api@internal
+      - traefik.http.routers.traefik-secure.tls.certresolver=letsencrypt
+      - traefik.http.routers.traefik-secure.tls=true
+      - traefik.http.routers.traefik-secure.middlewares=traefik-auth,security-headers
+      
+      # Basic authentication using credentials stored in .env
+      - traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}
+      
+      # Enable security headers for better protection
+      - traefik.http.middlewares.security-headers.headers.stsSeconds=63072000
+      - traefik.http.middlewares.security-headers.headers.forceSTSHeader=true
+      - traefik.http.middlewares.security-headers.headers.stsIncludeSubdomains=true
+      - traefik.http.middlewares.security-headers.headers.stsPreload=true
+      - traefik.http.middlewares.security-headers.headers.frameDeny=true
+      - traefik.http.middlewares.security-headers.headers.contentTypeNosniff=true
+      - traefik.http.middlewares.security-headers.headers.browserXssFilter=true
+
+  socket-proxy:
+    image: tecnativa/docker-socket-proxy
+    container_name: socket-proxy
+    restart: unless-stopped
+    
+    # Limit access to exposed Docker functionalities
+    environment:
+      CONTAINERS: 1
+      SERVICES: 1
+    
+    networks:
+      - traefik-net
+    
+    ports:
+      - "2375"
+    
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro # Mounted as read-only for security
+
+networks:
+  traefik-net:
+    external: true
