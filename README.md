@@ -1,4 +1,4 @@
-# 📌 Traefik and Docker Stacks
+# 🐳 Traefik and Docker Stacks
 
 [![CC BY-SA 4.0][cc-by-sa-shield]][cc-by-sa]
 ![Docker](https://img.shields.io/badge/-Docker_compose-2496ED?style=flat&logo=docker&logoColor=white)
@@ -6,23 +6,6 @@
 
 
 This collection of **Docker Compose** stacks allows for easy self-hosting using **Traefik** as the main reverse proxy. It automatically manages SSL certificates and ensures secure routing.
-
----
-
-## 📜 License & Attribution
-
-This project is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/).
-
-### 🔹 Rights and Obligations:
-
-- ✅ You may **use, modify, and redistribute** this guide and its configurations.
-- ✅ You must **credit the author** by citing **[Linkeaz](https://github.com/linkeaz)** or [Slym B.](https://github.com/slymb).
-- ❌ You **may not remove attribution**.
-
-
-[cc-by-sa]: http://creativecommons.org/licenses/by-sa/4.0/
-[cc-by-sa-image]: https://licensebuttons.net/l/by-sa/4.0/88x31.png
-[cc-by-sa-shield]: https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg
 
 ---
 
@@ -53,7 +36,7 @@ This project provides a collection of **secure Docker Compose stacks**, designed
 
 It simplifies self-hosting by ensuring **secure routing** and **automated SSL certificate management** via Let's Encrypt.
 
-### 🔹 Features and Security:
+### Features and Security:
 
 - **Traefik** as a reverse proxy to centralize and secure service access.
 - **Automated SSL certificate management** with Let's Encrypt.
@@ -65,19 +48,11 @@ It simplifies self-hosting by ensuring **secure routing** and **automated SSL ce
 
 ---
 
-## 🔧 Available Stacks
-
-### 🏗 **Traefik** (Secure Reverse Proxy)
+## **Traefik** (Secure Reverse Proxy)
 
 - Intelligent routing for HTTP/HTTPS requests.
 - Automated SSL certificate management.
 - Service security with middlewares (authentication, IP filtering, etc.).
-
-### 📊 **Dockge** (Container Management Interface)
-
-- Simplified web interface for managing services.
-- Quick access to logs and Docker configurations.
-- Easy integration with Traefik.
 
 ### 🔄 **Other Modular Services**
 
@@ -105,3 +80,23 @@ Each stack offers different configuration methods depending on usage:
 - [Traefik Documentation](https://doc.traefik.io/traefik/)
 - [Docker Docs](https://docs.docker.com/)
 - [Let’s Encrypt](https://letsencrypt.org/docs/)
+
+---
+
+## © License & Attribution
+
+[![CC BY-SA 4.0][cc-by-sa-image]][cc-by-sa]
+
+This project is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/).
+
+### Rights and Obligations:
+
+-  You may **use, modify, and redistribute** this guide and its configurations.
+-  You must **credit the author** by citing **[Linkeaz](https://github.com/linkeaz)** or [Slym B.](https://github.com/slymb).
+-  You **may not remove attribution**.
+
+[cc-by-sa]: http://creativecommons.org/licenses/by-sa/4.0/
+[cc-by-sa-image]: https://licensebuttons.net/l/by-sa/4.0/88x31.png
+[cc-by-sa-shield]: https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg
+
+
