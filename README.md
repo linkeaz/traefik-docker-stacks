@@ -48,13 +48,13 @@ It simplifies self-hosting by ensuring **secure routing** and **automated SSL ce
 
 ---
 
-## **Traefik** (Secure Reverse Proxy)
+## 🏗 **Traefik** (Secure Reverse Proxy)
 
 - Intelligent routing for HTTP/HTTPS requests.
 - Automated SSL certificate management.
 - Service security with middlewares (authentication, IP filtering, etc.).
 
-### 🔄 **Other Modular Services**
+### **Other Modular Services**
 
 This project is designed to be **scalable**, allowing additional services to be integrated into Traefik with custom configurations.
 
@@ -85,15 +85,16 @@ Each stack offers different configuration methods depending on usage:
 
 ## © License & Attribution
 
-[![CC BY-SA 4.0][cc-by-sa-image]][cc-by-sa]
-
 This project is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/).
+
+[![CC BY-SA 4.0][cc-by-sa-image]][cc-by-sa]
 
 ### Rights and Obligations:
 
 -  You may **use, modify, and redistribute** this guide and its configurations.
 -  You must **credit the author** by citing **[Linkeaz](https://github.com/linkeaz)** or [Slym B.](https://github.com/slymb).
 -  You **may not remove attribution**.
+
 
 [cc-by-sa]: http://creativecommons.org/licenses/by-sa/4.0/
 [cc-by-sa-image]: https://licensebuttons.net/l/by-sa/4.0/88x31.png
